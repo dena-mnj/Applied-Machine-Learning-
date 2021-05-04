@@ -1,0 +1,65 @@
+import numpy as np
+import pandas as pd
+
+def percentage():
+    
+    df = pd.read_csv('readonly/fraud_data.csv')
+    per=len(df[df['Class']==1])/len(df)
+    return per   # percentage of the observations in the dataset that are instances of fraud
+
+percentage()
+
+
+from sklearn.model_selection import train_test_split
+
+df = pd.read_csv('readonly/fraud_data.csv')
+
+X = df.iloc[:,:-1]
+y = df.iloc[:,-1]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+
+def dummy():
+    from sklearn.dummy import DummyClassifier
+    from sklearn.metrics import recall_score,accuracy_score
+    
+    dummy_majority = DummyClassifier(strategy = 'most_frequent').fit(X_train, y_train)
+    y_dummy_predicted = dummy_majority.predict(X_test)
+    
+    accuracy = accuracy_score(y_test, y_dummy_predicted)
+    recall = recall_score(y_test, y_dummy_predicted)
+    
+    return (accuracy, recall)
+
+dummy()
+
+
+def train_svc():
+    from sklearn.metrics import recall_score, precision_score, accuracy_score
+    from sklearn.svm import SVC
+    
+    clf=SVC().fit(X_train, y_train)
+    y_predicted=clf.predict(X_test)
+    accuracy = accuracy_score(y_test, y_predicted)
+    recall = recall_score(y_test, y_predicted)
+    precision = precision_score(y_test, y_predicted)
+    
+    return (accuracy, recall, precision)
+
+train_svc()
+
+
+def svm_confusion():
+    from sklearn.metrics import confusion_matrix
+    from sklearn.svm import SVC
+
+    clf=SVC(C= 1e9, gamma= 1e-07).fit(X_train, y_train)
+    y_decision=clf.decision_function(X_test)
+    
+    y_decision = np.where(y_decision > -220, 1, 0)
+    conf_matrix = confusion_matrix(y_test, y_decision)
+    
+    return conf_matrix
+
+svm_confusion()
