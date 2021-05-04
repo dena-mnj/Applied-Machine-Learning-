@@ -1,4 +1,4 @@
-# Applied-Machine-Learning-
+# Applied-Machine-Learning
 
 The focus of this course was: 
 Discussion of how machine learning is different than descriptive statistics. 
