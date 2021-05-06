@@ -63,3 +63,40 @@ def svm_confusion():
     return conf_matrix
 
 svm_confusion()
+
+def log_reg():
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.metrics import precision_recall_curve
+    from sklearn.metrics import roc_curve, auc
+    import matplotlib.pyplot as plt
+    
+    
+    lr = LogisticRegression().fit(X_train, y_train)
+    y_proba_lr = lr.fit(X_train, y_train).predict_proba(X_test)
+    
+    precision, recall, thresholds = precision_recall_curve(y_test, y_proba_lr[0:5424,1])
+    
+    fpr_lr, tpr_lr, _ = roc_curve(y_test, y_proba_lr[0:5424,1])
+    roc_auc_lr = auc(fpr_lr, tpr_lr)
+    
+    plt.figure()
+    plt.plot(precision, recall, label='Precision-Recall Curve')
+    plt.xlabel('Precision', fontsize=16)
+    plt.ylabel('Recall', fontsize=16)
+    plt.axes().set_aspect('equal')
+    plt.show()
+    
+    for i, x in enumerate(precision):
+        if x==0.75:
+            ii=i
+    r=recall[ii] 
+            
+    for k, y in enumerate(fpr_lr):
+        if y==0.159618263:
+            kk=k   
+    tpr=tpr_lr[28]
+     
+    
+    return (r,tpr)
+
+log_reg()
